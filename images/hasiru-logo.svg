@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+    <!-- Leaf Icon -->
+    <path d="M30 10 C 30 10, 40 5, 50 10 C 60 15, 55 25, 50 30 C 45 35, 35 35, 30 30 C 25 25, 20 15, 30 10" 
+          fill="#1B4D3E"/>
+    
+    <!-- Text -->
+    <text x="70" y="35" 
+          font-family="Arial, sans-serif" 
+          font-size="24" 
+          font-weight="bold" 
+          fill="#1B4D3E">
+        Hasiru AI
+    </text>
+</svg> 

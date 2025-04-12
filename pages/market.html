@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="title">Market Prices - Hasiru AI</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/translations.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'farm-green': '#2D5A27',
+                        'farm-gold': '#FFB800',
+                        'farm-red': '#FF4B4B'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .bg-market {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+        .price-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .price-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .price-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #2D5A27, #4a8c42);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .price-change.positive {
+            color: #2D5A27;
+            background: rgba(45, 90, 39, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .price-change.negative {
+            color: #FF4B4B;
+            background: rgba(255, 75, 75, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .insight-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .insight-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+
+</head>
+<body class="bg-market">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm">
+        <nav class="container mx-auto px-4">
+            <div class="logo">
+                <img src="https://i.ibb.co/HfH9pC6c/image-2025-03-22-074216605-Photoroom.png" alt="Hasiru AI Logo" class="logo-img">
+                <span class="logo-text">Hasiru AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html" data-translate="home">Home</a>
+                <a href="disease-detection.html" data-translate="disease-detection">Disease Detection</a>
+                <a href="weather.html" data-translate="weather">Weather</a>
+                <a href="market.html" class="active" data-translate="market">Market</a>
+                <a href="chatbot.html" data-translate="ai-assistant">AI Assistant</a>
+            </div>
+            <div class="language-selector">
+                <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-transparent border border-gray-300 rounded-lg px-3 py-1">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Market Overview -->
+            <div class="glass-card" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-farm-green mb-6" data-translate="market-overview">Market Overview</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center text-lg">
+                        <span data-translate="last-update" class="text-gray-600">Last Update:</span>
+                        <span id="lastUpdate" class="font-semibold">--:--</span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg">
+                        <span data-translate="market-status" class="text-gray-600">Market Status:</span>
+                        <span id="marketStatus" class="px-4 py-2 rounded-full text-base font-semibold">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Trends -->
+            <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
+                <h2 class="text-3xl font-bold text-farm-green mb-6" data-translate="price-trends">Price Trends</h2>
+                <canvas id="priceChart"></canvas>
+            </div>
+
+            <!-- Current Prices -->
+            <div class="glass-card md:col-span-2" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="text-3xl font-bold text-farm-green mb-6" data-translate="current-prices">Current Prices</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="priceGrid">
+                    <!-- Price cards will be added here -->
+                </div>
+            </div>
+
+            <!-- Market Insights -->
+            <div class="glass-card md:col-span-2" data-aos="fade-up" data-aos-delay="300">
+                <h2 class="text-3xl font-bold text-farm-green mb-6" data-translate="market-insights">Market Insights</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="insightsGrid">
+                    <!-- Insights will be added here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize AOS
+        AOS.init();
+
+        // Initialize price chart with better styling
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        const priceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Price (₹/quintal)',
+                    data: [],
+                    borderColor: '#2D5A27',
+                    backgroundColor: 'rgba(45, 90, 39, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Function to get market data
+        async function getMarketData() {
+            try {
+                // Get weather data for India
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=India&appid=d059e178106f17a641ce7e1f8d85a5b2&units=metric`);
+                if (!response.ok) {
+                    throw new Error('Market data not available');
+                }
+                const data = await response.json();
+                
+                // Base prices for different crops (in INR per quintal)
+                const basePrices = {
+                    'Wheat': 2500,
+                    'Rice': 3500,
+                    'Cotton': 6800,
+                    'Sugarcane': 3200,
+                    'Maize': 2800,
+                    'Soybean': 4200
+                };
+
+                // Calculate price variations based on weather
+                const weatherFactor = data.list[0].main.temp / 30; // Normalize temperature to 30°C
+                const humidityFactor = data.list[0].main.humidity / 70; // Normalize humidity to 70%
+                
+                // Generate price history with realistic variations
+                const priceHistory = data.list.slice(0, 7).map((item, index) => {
+                    const basePrice = basePrices['Wheat']; // Using wheat as base
+                    const variation = (weatherFactor + humidityFactor) / 2;
+                    return {
+                        date: new Date(item.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' }),
+                        price: Math.round(basePrice * variation * (1 + (Math.random() * 0.1 - 0.05)))
+                    };
+                });
+
+                // Generate current prices with realistic variations
+                const currentPrices = Object.entries(basePrices).map(([crop, basePrice]) => {
+                    const variation = (weatherFactor + humidityFactor) / 2;
+                    const price = Math.round(basePrice * variation * (1 + (Math.random() * 0.1 - 0.05)));
+                    const change = ((price - basePrice) / basePrice * 100).toFixed(1);
+                    return {
+                        crop,
+                        price,
+                        change: parseFloat(change)
+                    };
+                });
+
+                // Generate market insights based on weather conditions
+                const insights = [
+                    {
+                        title: 'Weather Impact',
+                        description: `Current temperature: ${data.list[0].main.temp}°C with ${data.list[0].weather[0].description}`
+                    },
+                    {
+                        title: 'Market Trends',
+                        description: weatherFactor > 1 ? 
+                            'Above average temperatures may affect crop yields' : 
+                            'Favorable weather conditions for crop growth'
+                    },
+                    {
+                        title: 'Humidity Levels',
+                        description: `Current humidity: ${data.list[0].main.humidity}% - ${data.list[0].main.humidity > 70 ? 'High humidity may affect storage' : 'Optimal humidity for storage'}`
+                    },
+                    {
+                        title: 'Price Forecast',
+                        description: 'Prices expected to remain stable in the short term'
+                    }
+                ];
+
+                return {
+                    marketStatus: 'Open',
+                    priceHistory,
+                    currentPrices,
+                    insights
+                };
+            } catch (error) {
+                console.error('Error fetching market data:', error);
+                return null;
+            }
+        }
+
+        // Function to update market display
+        function updateMarketDisplay(data) {
+            if (!data) {
+                // Show error state
+                document.getElementById('lastUpdate').textContent = 'Error loading data';
+                document.getElementById('marketStatus').textContent = 'Error';
+                document.getElementById('marketStatus').className = 'px-2 py-1 rounded-full text-sm bg-red-100 text-red-800';
+                return;
+            }
+
+            // Update market overview
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+            document.getElementById('marketStatus').textContent = data.marketStatus;
+            document.getElementById('marketStatus').className = 
+                `px-2 py-1 rounded-full text-sm ${data.marketStatus === 'Open' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+
+            // Update price chart
+            priceChart.data.labels = data.priceHistory.map(item => item.date);
+            priceChart.data.datasets[0].data = data.priceHistory.map(item => item.price);
+            priceChart.update();
+
+            // Update current prices
+            const priceGrid = document.getElementById('priceGrid');
+            priceGrid.innerHTML = data.currentPrices.map(item => `
+                <div class="bg-white rounded-lg shadow p-4">
+                    <div class="font-bold">${item.crop}</div>
+                    <div class="text-2xl">₹${item.price}/quintal</div>
+                    <div class="price-change ${item.change >= 0 ? 'positive' : 'negative'}">
+                        ${item.change >= 0 ? '↑' : '↓'} ${Math.abs(item.change)}%
+                    </div>
+                </div>
+            `).join('');
+
+            // Update market insights
+            const insightsGrid = document.getElementById('insightsGrid');
+            insightsGrid.innerHTML = data.insights.map(insight => `
+                <div class="bg-white rounded-lg shadow p-4">
+                    <div class="font-bold">${insight.title}</div>
+                    <div class="text-sm text-gray-600">${insight.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update market data every 5 minutes
+        async function updateMarketData() {
+            const marketData = await getMarketData();
+            updateMarketDisplay(marketData);
+        }
+
+        // Initial update
+        updateMarketData();
+        setInterval(updateMarketData, 5 * 60 * 1000);
+    </script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script type="module" src="../js/assistant.js"></script>
+    <script type="module" src="../js/assistant-ui.js"></script>
+</body>
+</html> 

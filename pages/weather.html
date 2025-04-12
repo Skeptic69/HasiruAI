@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="title">Weather Insights - Hasiru AI</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/translations.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'farm-green': '#2D5A27',
+                        'farm-gold': '#FFB800',
+                        'farm-red': '#FF4B4B'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .weather-icon {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .bg-weather {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+        .weather-stat {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        .weather-stat:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        .weather-stat i {
+            font-size: 1.5rem;
+            color: #2D5A27;
+        }
+        .forecast-day {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .forecast-day:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .crop-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        .crop-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .temp-value {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #2D5A27, #4a8c42);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .location-text {
+            font-size: 1.2rem;
+            color: #2D5A27;
+            font-weight: 500;
+        }
+    </style>
+
+</head>
+<body class="bg-weather">
+    <header class="bg-white/80 backdrop-blur-md shadow-sm">
+        <nav class="container mx-auto px-4">
+            <div class="logo">
+                <img src="https://i.ibb.co/HfH9pC6c/image-2025-03-22-074216605-Photoroom.png" alt="Hasiru AI Logo" class="logo-img">
+                <span class="logo-text">Hasiru AI</span>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html" data-translate="home">Home</a>
+                <a href="disease-detection.html" data-translate="disease-detection">Disease Detection</a>
+                <a href="weather.html" class="active" data-translate="weather">Weather</a>
+                <a href="market.html" data-translate="market">Market</a>
+                <a href="chatbot.html" data-translate="ai-assistant">AI Assistant</a>
+            </div>
+            <div class="language-selector">
+                <select id="languageSelect" onchange="changeLanguage(this.value)" class="bg-transparent border border-gray-300 rounded-lg px-3 py-1">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Current Weather -->
+            <div class="glass-card" data-aos="fade-up">
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-3xl font-bold text-farm-green" data-translate="current-weather">Current Weather</h2>
+                    <button onclick="refreshWeather()" class="text-farm-green hover:text-farm-gold transition-colors text-xl">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="text-center md:text-left">
+                        <div class="weather-icon" id="currentWeatherIcon">🌤️</div>
+                        <div class="temp-value" id="currentTemp">--°C</div>
+                        <div class="location-text mt-3" id="currentLocation">Loading location...</div>
+                    </div>
+                    <div class="w-full md:w-auto space-y-4">
+                        <div class="weather-stat">
+                            <i class="fas fa-tint"></i>
+                            <div>
+                                <div class="text-sm text-gray-600">Humidity</div>
+                                <div class="text-xl font-semibold" id="currentHumidity">--%</div>
+                            </div>
+                        </div>
+                        <div class="weather-stat">
+                            <i class="fas fa-wind"></i>
+                            <div>
+                                <div class="text-sm text-gray-600">Wind Speed</div>
+                                <div class="text-xl font-semibold" id="currentWind">-- km/h</div>
+                            </div>
+                        </div>
+                        <div class="weather-stat">
+                            <i class="fas fa-cloud-rain"></i>
+                            <div>
+                                <div class="text-sm text-gray-600">Rainfall</div>
+                                <div class="text-xl font-semibold" id="currentRainfall">-- mm</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Chart -->
+            <div class="glass-card" data-aos="fade-up" data-aos-delay="100">
+                <h2 class="text-3xl font-bold text-farm-green mb-6" data-translate="weather-forecast">Temperature Trend</h2>
+                <canvas id="weatherChart" height="300"></canvas>
+            </div>
+
+            <!-- 7-Day Forecast -->
+            <div class="glass-card md:col-span-2" data-aos="fade-up" data-aos-delay="200">
+                <h2 class="text-3xl font-bold text-farm-green mb-6" data-translate="7-day-forecast">7-Day Forecast</h2>
+                <div class="grid grid-cols-2 md:grid-cols-7 gap-4" id="forecastGrid">
+                    <!-- Forecast items will be added here -->
+                </div>
+            </div>
+
+            <!-- Crop Recommendations -->
+            <div class="glass-card md:col-span-2" data-aos="fade-up" data-aos-delay="300">
+                <h2 class="text-3xl font-bold text-farm-green mb-6" data-translate="crop-recommendations">Crop Recommendations</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="cropRecommendations">
+                    <!-- Recommendations will be added here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize AOS
+        AOS.init();
+
+        // Initialize weather chart
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+        const weatherChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [],
+                    borderColor: '#2D5A27',
+                    backgroundColor: 'rgba(45, 90, 39, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Function to get weather data
+        async function getWeatherData(latitude, longitude) {
+            try {
+                // Get current weather
+                const currentResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=d059e178106f17a641ce7e1f8d85a5b2&units=metric`);
+                if (!currentResponse.ok) {
+                    throw new Error('Weather data not available');
+                }
+                const currentData = await currentResponse.json();
+
+                // Get 7-day forecast
+                const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=d059e178106f17a641ce7e1f8d85a5b2&units=metric`);
+                if (!forecastResponse.ok) {
+                    throw new Error('Forecast data not available');
+                }
+                const forecastData = await forecastResponse.json();
+
+                // Process daily forecast data
+                const dailyForecast = forecastData.list.filter((item, index) => index % 8 === 0).slice(0, 7);
+
+                return {
+                    current: {
+                        temperature: currentData.main.temp,
+                        humidity: currentData.main.humidity,
+                        windSpeed: currentData.wind.speed,
+                        precipitation: currentData.rain ? currentData.rain['1h'] : 0,
+                        condition: currentData.weather[0].main,
+                        location: currentData.name
+                    },
+                    daily: dailyForecast.map(day => ({
+                        date: new Date(day.dt * 1000),
+                        temperature: day.main.temp,
+                        minTemp: day.main.temp_min,
+                        maxTemp: day.main.temp_max,
+                        condition: day.weather[0].main,
+                        humidity: day.main.humidity,
+                        windSpeed: day.wind.speed
+                    }))
+                };
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                return null;
+            }
+        }
+
+        // Function to update weather display
+        function updateWeatherDisplay(data) {
+            if (!data) return;
+
+            const current = data.current;
+            const daily = data.daily;
+
+            // Update current weather
+            document.getElementById('currentTemp').textContent = `${Math.round(current.temperature)}°C`;
+            document.getElementById('currentHumidity').textContent = `${current.humidity}%`;
+            document.getElementById('currentWind').textContent = `${Math.round(current.windSpeed)} km/h`;
+            document.getElementById('currentRainfall').textContent = `${current.precipitation || 0} mm`;
+            document.getElementById('currentLocation').textContent = current.location;
+            
+            // Update weather icon based on conditions
+            const weatherIcon = document.getElementById('currentWeatherIcon');
+            weatherIcon.textContent = getWeatherIcon(current.condition);
+
+            // Update chart
+            weatherChart.data.labels = daily.map(day => 
+                new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })
+            );
+            weatherChart.data.datasets[0].data = daily.map(day => day.temperature);
+            weatherChart.update();
+
+            // Update 7-day forecast
+            const forecastGrid = document.getElementById('forecastGrid');
+            forecastGrid.innerHTML = daily.map(day => `
+                <div class="forecast-day">
+                    <div class="font-bold text-gray-800">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                    <div class="text-3xl my-2">${getWeatherIcon(day.condition)}</div>
+                    <div class="text-xl font-semibold text-gray-800">${Math.round(day.temperature)}°C</div>
+                    <div class="text-sm text-gray-600 mt-1">${Math.round(day.minTemp)}° / ${Math.round(day.maxTemp)}°</div>
+                </div>
+            `).join('');
+
+            // Update crop recommendations
+            updateCropRecommendations({
+                temperature: current.temperature,
+                humidity: current.humidity,
+                rainfall: current.precipitation || 0
+            });
+        }
+
+        // Function to get weather icon based on conditions
+        function getWeatherIcon(condition) {
+            const icons = {
+                'Clear': '☀️',
+                'Clouds': '☁️',
+                'Rain': '🌧️',
+                'Drizzle': '🌦️',
+                'Thunderstorm': '⛈️',
+                'Snow': '🌨️',
+                'Mist': '🌫️',
+                'Fog': '🌫️',
+                'Haze': '🌫️'
+            };
+            return icons[condition] || '🌤️';
+        }
+
+        // Function to update crop recommendations
+        function updateCropRecommendations(weather) {
+            const recommendations = document.getElementById('cropRecommendations');
+            const crops = getCropRecommendations(weather);
+            
+            recommendations.innerHTML = crops.map(crop => `
+                <div class="crop-card">
+                    <div class="text-2xl mb-2">${getCropIcon(crop.name)}</div>
+                    <div class="font-bold text-lg text-gray-800">${crop.name}</div>
+                    <div class="text-sm text-gray-600 mt-2">${crop.reason}</div>
+                </div>
+            `).join('');
+        }
+
+        // Function to get crop icon
+        function getCropIcon(crop) {
+            const icons = {
+                'Rice': '🌾',
+                'Cotton': '🌿',
+                'Wheat': '🌾',
+                'Sugarcane': '🌾',
+                'Maize': '🌽',
+                'Soybean': '🫘'
+            };
+            return icons[crop] || '🌱';
+        }
+
+        // Function to get crop recommendations based on weather
+        function getCropRecommendations(weather) {
+            const recommendations = [];
+            
+            if (weather.temperature >= 25 && weather.temperature <= 35) {
+                recommendations.push({
+                    name: 'Rice',
+                    reason: 'Optimal temperature for rice cultivation'
+                });
+            }
+            
+            if (weather.humidity >= 60 && weather.humidity <= 80) {
+                recommendations.push({
+                    name: 'Cotton',
+                    reason: 'Favorable humidity levels'
+                });
+            }
+            
+            if (weather.rainfall > 0 && weather.rainfall < 50) {
+                recommendations.push({
+                    name: 'Wheat',
+                    reason: 'Adequate rainfall for wheat'
+                });
+            }
+
+            // Add default recommendations if none match
+            if (recommendations.length === 0) {
+                recommendations.push({
+                    name: 'Maize',
+                    reason: 'Versatile crop suitable for various conditions'
+                });
+                recommendations.push({
+                    name: 'Soybean',
+                    reason: 'Adaptable to different weather conditions'
+                });
+            }
+            
+            return recommendations;
+        }
+
+        // Function to refresh weather data
+        async function refreshWeather() {
+            try {
+                // Default to Bangalore coordinates if geolocation is not available
+                let latitude = 12.9716;
+                let longitude = 77.5946;
+
+                if (navigator.geolocation) {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject);
+                    });
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                }
+
+                const weatherData = await getWeatherData(latitude, longitude);
+                if (weatherData) {
+                    updateWeatherDisplay(weatherData);
+                } else {
+                    document.getElementById('currentLocation').textContent = 'Unable to fetch weather data';
+                }
+            } catch (error) {
+                console.error('Error in refreshWeather:', error);
+                document.getElementById('currentLocation').textContent = 'Unable to access location. Using default location.';
+                // Try with default location
+                const weatherData = await getWeatherData(12.9716, 77.5946);
+                if (weatherData) {
+                    updateWeatherDisplay(weatherData);
+                }
+            }
+        }
+
+        // Call refreshWeather immediately and set up auto-refresh
+        refreshWeather();
+        setInterval(refreshWeather, 5 * 60 * 1000); // Refresh every 5 minutes
+    </script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script type="module" src="../js/assistant.js"></script>
+    <script type="module" src="../js/assistant-ui.js"></script>
+</body>
+</html> 

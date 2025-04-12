@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="smart-notifications-title">Smart Notifications - Hasiru AI</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" src="../js/translations.js"></script>
+</head>
+<body>
+    <header class="nav-container scrolled">
+        <nav>
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="https://i.ibb.co/HfH9pC6c/image-2025-03-22-074216605-Photoroom.png" alt="Hasiru AI Logo" class="logo-img">
+                    <span class="logo-text">Hasiru AI</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html" data-translate="home">Home</a>
+                <a href="disease-detection.html" data-translate="disease-detection">Disease Detection</a>
+                <a href="weather.html" data-translate="weather">Weather</a>
+                <a href="market.html" data-translate="market">Market</a>
+                <a href="chatbot.html" data-translate="ai-assistant">AI Assistant</a>
+                <a href="#" class="active" data-translate="smart-notifications">Smart Notifications</a>
+            </div>
+            <div class="language-selector">
+                <select id="languageSelect" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="bn">বাংলা</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="ta">தமிழ்</option>
+                    <option value="ml">മലയാളം</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                </select>
+            </div>
+            <button class="menu-toggle md:hidden">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main class="page-main">
+        <section class="notifications-section">
+            <h1 data-translate="smart-notifications-header">Smart Notifications</h1>
+            <div class="notification-list">
+                <div class="notification-item new">
+                    <i class="fas fa-tint notification-icon water"></i>
+                    <div class="notification-content">
+                        <p class="notification-text" data-translate="notification-water">Water your tomato plants today.</p>
+                        <span class="notification-time">Just now</span>
+                    </div>
+                    <button class="notification-action" data-translate="dismiss">Dismiss</button>
+                </div>
+                <div class="notification-item">
+                    <i class="fas fa-camera notification-icon upload"></i>
+                    <div class="notification-content">
+                        <p class="notification-text" data-translate="notification-leaf">Reminder: Upload leaf photo for disease check.</p>
+                        <span class="notification-time">2 hours ago</span>
+                    </div>
+                    <button class="notification-action" data-translate="dismiss">Dismiss</button>
+                </div>
+                <div class="notification-item">
+                    <i class="fas fa-cloud-sun-rain notification-icon weather"></i>
+                    <div class="notification-content">
+                        <p class="notification-text" data-translate="notification-weather-alert">Weather Alert: Heavy rain expected tomorrow afternoon.</p>
+                        <span class="notification-time">1 day ago</span>
+                    </div>
+                    <button class="notification-action" data-translate="dismiss">Dismiss</button>
+                </div>
+                <div class="notification-item">
+                    <i class="fas fa-seedling notification-icon fertilizer"></i>
+                    <div class="notification-content">
+                        <p class="notification-text" data-translate="notification-fertilizer">Fertilizer application recommended for maize crop this week.</p>
+                        <span class="notification-time">3 days ago</span>
+                    </div>
+                    <button class="notification-action" data-translate="dismiss">Dismiss</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Hasiru AI</h3>
+                <p data-translate="footer-desc">
+                    Empowering farmers with AI technology for sustainable agriculture. We provide cutting-edge solutions to help farmers make better decisions.
+                </p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 data-translate="footer-links">Quick Links</h3>
+                <ul>
+                    <li><a href="../index.html" data-translate="home">Home</a></li>
+                    <li><a href="disease-detection.html" data-translate="disease-detection">Disease Detection</a></li>
+                    <li><a href="weather.html" data-translate="weather">Weather</a></li>
+                    <li><a href="market.html" data-translate="market">Market</a></li>
+                    <li><a href="chatbot.html" data-translate="ai-assistant">AI Assistant</a></li>
+                    <li><a href="#" data-translate="smart-notifications">Smart Notifications</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3 data-translate="footer-contact">Contact</h3>
+                <p>Email: support@hasiruai.com</p>
+                <p>Phone: +91 1234567890</p>
+                <p>Address: Bangalore, Karnataka, India</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p data-translate="copyright">&copy; 2024 Hasiru AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Dismiss notification
+        document.querySelectorAll('.notification-action').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.target.closest('.notification-item').remove();
+            });
+        });
+    </script>
+    
+</body>
+</html> 

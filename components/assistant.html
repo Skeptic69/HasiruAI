@@ -1,0 +1,57 @@
+<div class="assistant-container" id="assistantContainer">
+    <div class="assistant-header">
+        <div class="assistant-title">
+            <i class="fas fa-robot"></i>
+            <span data-translate="assistant-title">Hasiru AI Assistant</span>
+        </div>
+        <div class="assistant-controls">
+            <button class="assistant-control-btn" id="toggleVoice" title="Toggle voice mode">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button class="assistant-control-btn" id="toggleLanguage" title="Change language">
+                <i class="fas fa-language"></i>
+            </button>
+            <button class="assistant-control-btn" id="minimizeAssistant" title="Minimize">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="assistant-messages" id="assistantMessages">
+        <!-- Welcome message -->
+        <div class="message assistant-message">
+            <div class="message-avatar assistant-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content" data-translate="welcome-message">
+                Hello! I'm your Hasiru AI farming assistant. How can I help you today?
+            </div>
+        </div>
+    </div>
+
+    <div class="assistant-input">
+        <button class="voice-button" id="voiceInput" title="Voice input">
+            <i class="fas fa-microphone"></i>
+        </button>
+        <input type="text" class="input-field" id="userInput" data-translate="input-placeholder" placeholder="Type your question...">
+        <button class="send-button" id="sendMessage">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Language selection modal -->
+<div class="modal" id="languageModal">
+    <div class="modal-content">
+        <h3 data-translate="select-language">Select Language</h3>
+        <div class="language-options">
+            <button data-lang="en" class="lang-btn">English</button>
+            <button data-lang="hi" class="lang-btn">हिंदी</button>
+            <button data-lang="bn" class="lang-btn">বাংলা</button>
+            <button data-lang="te" class="lang-btn">తెలుగు</button>
+            <button data-lang="ta" class="lang-btn">தமிழ்</button>
+            <button data-lang="ml" class="lang-btn">മലയാളം</button>
+            <button data-lang="kn" class="lang-btn">ಕನ್ನಡ</button>
+        </div>
+    </div>
+</div> 

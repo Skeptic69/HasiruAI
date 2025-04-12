@@ -1,55 +1,122 @@
+# AI-Powered Farming Platform 🌾
 
+A comprehensive web platform designed to empower smallholder farmers with AI-driven insights and tools.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- 🌿 AI-powered plant disease detection using image analysis
+- 🌤️ Weather-based crop recommendations
+- 💰 Market price predictions
+- 💬 Multilingual AI chatbot for farming advice
+- 📱 SMS/WhatsApp alerts for weather & crop insights
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Frontend
+- Next.js 14 (React)
+- TailwindCSS
+- TypeScript
+- PWA support
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Backend
+- Node.js with Express
+- MongoDB
+- Firebase (Storage & Authentication)
 
-Follow these steps:
+### AI & External Services
+- Google Vision API
+- OpenWeather API
+- AgriMarket API
+- Google Gemini AI
+- Twilio API (SMS/WhatsApp)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Project Structure
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```
+├── frontend/           # Next.js frontend application
+├── backend/           # Express.js backend API
+├── shared/           # Shared types and utilities
+└── docs/             # Documentation
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Getting Started
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Prerequisites
+- Node.js 18+
+- MongoDB
+- Firebase account
+- API keys for external services
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/ai-farming-platform.git
+cd ai-farming-platform
+```
+
+2. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+```
+
+3. Install backend dependencies:
+```bash
+cd ../backend
+npm install
+```
+
+4. Set up environment variables:
+```bash
+# Frontend (.env.local)
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_FIREBASE_CONFIG={...}
+
+# Backend (.env)
+MONGODB_URI=...
+GOOGLE_VISION_API_KEY=...
+OPENWEATHER_API_KEY=...
+AGRI_MARKET_API_KEY=...
+GEMINI_API_KEY=...
+TWILIO_ACCOUNT_SID=...
+TWILIO_AUTH_TOKEN=...
+```
+
+5. Start the development servers:
+```bash
+# Frontend
+cd frontend
+npm run dev
+
+# Backend
+cd backend
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Deployment
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Frontend: Vercel
+- Backend: Google Cloud Run
+- Database: MongoDB Atlas
+- Storage: Firebase Storage
 
-**Use GitHub Codespaces**
+## Contributing
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## What technologies are used for this project?
+## License
 
-This project is built with:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Acknowledgments
 
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
+- Google Cloud Platform
+- Vercel
+- MongoDB
+- Firebase
+- All the farmers who provided feedback during development 
