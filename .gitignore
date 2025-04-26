@@ -32,4 +32,16 @@ logs/
 
 # IDE files
 .vscode/
-.idea/ 
+.idea/
+
+# Service accounts and credentials
+*.pem
+*.key
+*.p12
+*.json
+*credentials*
+*service-account*
+service-account.json
+credentials.json
+api-keys.json
+secrets.*

@@ -114,7 +114,7 @@ const diseaseDetectionService = {
             const formData = new FormData();
             formData.append('image', imageFile);
 
-            const response = await fetch('/api/detect-disease', {
+            const response = await fetch('/api/disease-detection', {
                 method: 'POST',
                 body: formData
             });
@@ -131,6 +131,3 @@ const diseaseDetectionService = {
         }
     }
 };
-
-// Export services
-export { weatherService, notificationService, marketService, diseaseDetectionService }; 

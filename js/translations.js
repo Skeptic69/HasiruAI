@@ -1,4 +1,4 @@
-export const translations = {
+const translations = {
     'en': {
         // Common
         'home': 'Home',
@@ -89,16 +89,6 @@ export const translations = {
         'recent-activity': 'Recent Activity',
         'crop-status': 'Crop Status',
         'market-overview': 'Market Overview',
-        
-        // Smart Notifications
-        'smart-notifications': 'Smart Notifications',
-        'smart-notifications-title': 'Smart Notifications - Hasiru AI',
-        'smart-notifications-header': 'Smart Notifications',
-        'notification-water': 'Water your tomato plants today.',
-        'notification-leaf': 'Reminder: Upload leaf photo for disease check.',
-        'notification-weather-alert': 'Weather Alert: Heavy rain expected tomorrow afternoon.',
-        'notification-fertilizer': 'Fertilizer application recommended for maize crop this week.',
-        'dismiss': 'Dismiss',
         
         // Diseases
         'diseases': {
@@ -201,17 +191,7 @@ export const translations = {
         'priority': 'प्राथमिकता',
         'high': 'उच्च',
         'medium': 'मध्यम',
-        'low': 'निम्न',
-
-        // Smart Notifications (Hindi)
-        'smart-notifications': 'स्मार्ट सूचनाएं',
-        'smart-notifications-title': 'स्मार्ट सूचनाएं - हसिरु एआई',
-        'smart-notifications-header': 'स्मार्ट सूचनाएं',
-        'notification-water': 'आज अपने टमाटर के पौधों को पानी दें।',
-        'notification-leaf': 'अनुस्मारक: रोग जांच के लिए पत्ती की तस्वीर अपलोड करें।',
-        'notification-weather-alert': 'मौसम चेतावनी: कल दोपहर भारी बारिश की उम्मीद है।',
-        'notification-fertilizer': 'इस सप्ताह मक्के की फसल के लिए उर्वरक डालने की सिफारिश की गई है।',
-        'dismiss': 'खारिज करें',
+        'low': 'निम्न'
     },
     'bn': {
         // Bengali translations
@@ -369,4 +349,6 @@ function getTranslation(key, language, subKey = null) {
     return translations[key][language] || translations[key]['en'] || key;
 }
 
-export { getTranslation }; 
+// Make translations and getTranslation globally available
+window.translations = translations;
+window.getTranslation = getTranslation; 
