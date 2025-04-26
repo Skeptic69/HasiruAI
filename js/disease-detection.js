@@ -275,21 +275,15 @@ async function analyzeImage(base64Image) {
     try {
         ui.loading.toggle(true);
         ui.error.hide();
-        // Convert base64 to blob
-        const byteString = atob(base64Image);
-        const arrayBuffer = new ArrayBuffer(byteString.length);
-        const uint8Array = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < byteString.length; i++) {
-            uint8Array[i] = byteString.charCodeAt(i);
-        }
-        const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
-        // Create form data
-        const formData = new FormData();
-        formData.append('image', blob, 'image.jpg');
-        // Send to backend
-        const result = await fetch('http://localhost:3001/api/disease-detection/detect', {
+        // Send base64 image to backend
+        const result = await fetch('/api/detect-disease', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                image: base64Image
+            })
         });
         let data;
         try {
